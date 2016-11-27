@@ -1,0 +1,924 @@
+#include "he_utils.js" // generic helper functions
+
+Application.AddScriptInfo("5ACBAFF9-6A43-44D5-BDA1-4E647A51F6DF", "BBCode Tools", "1.0.0.0", "BBCode Tools for HippoEDIT", "Alexandr Cojocari", "alexandr.cojocari@gmail.com", "http://wiki.hippoedit.com/plugins/bbcode-tools");
+
+//////////////////////////////////////////////////////////////////////////
+// ICON DEFINITIONS
+//${ region Icons }
+
+// Icons by Yusuke Kamiyamane http://p.yusukekamiyamane.com/
+// http://www.iconfinder.com/search/57/?q=iconset%3Afugue
+
+var nIconNobb = Application.RegisterImageString(
+	'iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAMAAAAoLQ9TAAAAvVBMVEUAAAADIyNUfn4JNTVBbGwA \
+    ExMAJCQBLCw0X18qVVUgS0sWQkJQe3tQe3sAAADq7e3y9vZyBASXBASnAACYAACAAACVpKS6y8tP \
+    a2uSrq6mAACEAAArSEhukZECGBgBGRkBCQlIcnIAAAAAAAD+/v7s8/PX5+fn8PDa6Ojh7e3c6urU \
+    5eXk9PTx9vb3Xl7t9/fy+vrr8fG3MTGXMTH0/Pzn9fXh8vK/z8/u9PTV4ODO2trH1dXEYmKqXl6q \
+    MjJfih01AAAAJHRSTlMAh2ZmZipuZ2ZmZmY5HA7v7OXizMzMwbOroJmZkHpdUy4kGwhmueV+AAAA \
+    jUlEQVQY00XO1xaCMBBF0VGINMXeu4KgRiEJxf7/n6Wz1mD22z1PF36ada2FexxUOksMZhaSdLoF \
+    DDwm3ARkF2dS2IAcfiDcAeTq4ALy8hPJPUBGciSJQSEiFKz0/8MC1Mgu6CWl7PVnGEQkRHj7XNEA \
+    gE3K8vm4x2+lVHc4B7ZoB5XR2t/Dpqat2M7/AiOFGkQr1S+3AAAAAElFTkSuQmCC'
+);
+
+var nIconURL = Application.RegisterImageString(
+	'iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJ \
+    bWFnZVJlYWR5ccllPAAAAVBJREFUeNpi/P//PwMlgImBQjDwBrD4+fkxsLGxGTMyMuoA+RxIcj+A \
+    4XMFxMAl9+vXr7MsQIapiIiIR3x8fJy4uLgS0DCmv3///nvx4sWDysrKeSDVra2tCehy8+fPX/D0 \
+    6VMmRldX19Ta2pryffv2vZw0afKpT58+/W5paSkVFBREcer79+8Zampquvn4+Fjz8nLNnJycxJub \
+    WzpZvn79yisoKCQDNHHJx48fG4DO7bKysmQAugqIRUHOB2t+8+YN2CCgmkKg2obg4JAKkF6QAX/u \
+    33/6PD4+1WzSpN6iz58/f9y6dRvWAAN69yMvL28RSC1ID0gvI1DASVZWPqSoqNJXQ0NHUkBAiPnr \
+    1y9/r1698Lynp3UzSCMuucePH65hBMoLMTMzuwKdqo0lpG9CY0Edi9xVYIDuBhnACcS8oCglMQn8 \
+    AeLPjKN5gQEgwAAKfLCMgdNQ/QAAAABJRU5ErkJggg=='
+);
+
+var nIconEmail = Application.RegisterImageString(
+	'iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAMAAAAoLQ9TAAAAwFBMVEUAAABUfn4AAAANLi4CghE2 \
+    XFxLdHQAgAsCag8AbQY+ZWVDampHb29Vf38EjBUQhSgCYg0fQkIvVFQLJCT////7/f33/Pzu9vbz \
+    +Pjj8/Pp8fHe7Oza6elB51Ls8fHl7Ozh6enc5eXi7e3d6enW4uLB0tIssz4srT3z+vrv+fno9vbY \
+    5ubS3t7N29vH2Ni4ycm0xcWvwMCqu7ultrahsrKdrq69zs5k7nVbxWxYu2hV62ZRvWMs4j0uqD0n \
+    qDga3yucf1qgAAAAFHRSTlMAZxmG53Rr0c6ZcW9tTebJsH54aCQVNpMAAACiSURBVBjThc9HEoJA \
+    FATQD5KDmeCMknNWwRzufyuBoqhi5Vt097bhP5mYkIEoje3IKAlgjAopA1QZDDCKeTTVXjsUBiRV \
+    t06W3upKlUCMNM0+20NEIggxQo5fe17tOwjFAtCa4xZu1jSZ+wxuGg10khYpxnmOcXANEhrW2Pf2 \
+    nXsYPj7hAlYXvOu9D505bGYDjqJeFLUEIEfslyUnP3mOB/gBtF4T1RBFWxEAAAAASUVORK5CYII='
+);
+
+var nIconAlignLeft = Application.RegisterImageString(
+	'R0lGODlhEAAQAKIAAC8vL+fn50pKSlJSUnV1dUNDQzs7O////yH5BAEHAAcALAAAAAAQABAAAAMt \
+ 	eLrc/o6MSYUVBOpFxxVbyH1CYRaGIULXia6hm6ZADcDRbNRD4AeMn3CIKy4SADs='
+);
+
+var nIconAlignCenter = Application.RegisterImageString(
+	'R0lGODlhEAAQAKIAACcnJ+bm5kpKSlNTU0NDQ3V1dTk5Of///yH5BAEHAAcALAAAAAAQABAAAAMx \
+ 	eLrc/q6MSYUVBeo2ryVbeAyeQJyEYYibiaorC6EpbAC47ATBAOMAAo/BKxqLuuQiAQA7'
+);
+
+var nIconAlignRight = Application.RegisterImageString(
+	'R0lGODlhEAAQAKIAACcnJ+jo6EpKSkNDQ1NTUzs7O25ubv///yH5BAEHAAcALAAAAAAQABAAAAMv \
+ 	eLrc/s6QSYUVBup37fjbRnTC9xVFqB4m6q6PObgoYMNPoBOF7Q8Bhm5IHOKOigQAOw=='
+);
+
+var nIconAlignJustify = Application.RegisterImageString(
+	'R0lGODlhEAAQAKIAACcnJ+bm5kpKSkNDQ1JSUjs7O3V1df///yH5BAEHAAcALAAAAAAQABAAAAMv \
+ 	eLrc/s6QSYUVBupFybVDuG3eF4ZFMWrXOaTwCrlwCtzyY9TF7Q+MgHBIFOaOjQQAOw=='
+);
+
+var nIconBold = Application.RegisterImageString(
+	'R0lGODlhEAAQAKIAACcnJ8zMzKCgoFFRUebm5js7O7e3t////yH5BAEHAAcALAAAAAAQABAAAAM2 \
+ 	eLrc/jDKecK4eBBobjjCIEDW8IXjU2afWhRGIBQD+X7B/Rg6X2wNA2BIBAiADIJyyaQ4n5QEADs='
+);
+
+var nIconItalic = Application.RegisterImageString(
+	'R0lGODlhEAAQAKIAACQkJNLS0pmZmVRUVEVFRebm5sLCwv///yH5BAEHAAcALAAAAAAQABAAAAMm \
+	eLrc/jDKycK4I0w76AmERgmdRwgeKE4DsEIGIANGIRV47u38lAAAOw=='
+);
+
+var nIconMonospaced = Application.RegisterImageString(
+	'iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJ \
+    bWFnZVJlYWR5ccllPAAAAPZJREFUeNqkkz0OAVEUhecxEYlEjT0QUSnEAhQaHdHYgUJjA1aBwk+l \
+    EJ2EjihJiFJtCyjG9yaXvPiZiDfJl/Pmnjt3buZklOd5jtWllJqA8y8hZoRtFggzpY6OoQYdvZR4 \
+    PdGM1A/QhSqkoen3MmAu6wRpXXjzXKZE5E1BOpBz49ULyU0OhrAWNZse9ZJROzx6lF7FNsalTYw6 \
+    hT1zzhYLqBVagJXU+rCFNiQMz+zZQdbvZcBG1vmkyQDPV52CK1NftQKzL95TXX6mGIciaD3CCFKw \
+    kG9Thql4jngniOtndIZRyVdnm//x293gAlez2PonhbsAAwBPpzX8z/BpAQAAAABJRU5ErkJggg=='
+);
+
+var nIconStrike = Application.RegisterImageString(
+	'R0lGODlhEAAQAKIAACcnJ+Hh4W9vb1RUVKmpqURERO3t7f///yH5BAEHAAcALAAAAAAQABAAAAM0 \
+ 	eLrc/jBCMqoYIQ5hzJWCoBiE5HFSoa6sFIRZRMSVBHDGUEQBUABAggFiCBiPQ4lyyWwkAAA7'
+);
+
+var nIconUnderline = Application.RegisterImageString(
+	'R0lGODlhEAAQAKIAABsbG8zMzKmpqU5OTj09PeXl5b29vf///yH5BAEHAAcALAAAAAAQABAAAAM2 \
+ 	eLrc/jA6MWoIdYRnhlHY92CbokHkco7r0TYBUR4yVBACSBSRQPw4iZABKBqLPEdhyWQOn5IEADs='
+);
+
+var nIconSub = Application.RegisterImageString(
+	'iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAMAAAAoLQ9TAAAASFBMVEUAAAAAAAABAQEAAAAAAAAB \
+    AQEAAAABAQEBAQEBAQEBAQEBAQEBAQEAAAAAAAABAQEBAQEBAQEBAQEAAAABAQEAAAAAAAAAAABK \
+    zEwkAAAAGHRSTlMAGSHhrMW0oZBiv5dtRgiKfWhaOjAUEA56UsmwAAAAVElEQVQY062LOQ7AMAgE \
+    sSHgM/fx/58Gy0pBG3kKxM5qYRg52+wDeSPiztEI8auYhZwx6Sak0EWZlKJPpS5Y24UBNnEtzoTk \
+    KuphxKOJ231cD/zhBcrlAdrGh3JuAAAAAElFTkSuQmCC'
+);
+
+var nIconSup = Application.RegisterImageString(
+	'iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAMAAAAoLQ9TAAAAS1BMVEUAAAAAAAABAQEBAQEBAQEA \
+    AAAAAAAAAAABAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEAAAABAQEBAQEBAQEAAAABAQEBAQEA \
+    AABjxqfkAAAAGXRSTlMAGSDFsqsK4bugmGKKgW1aLwORkH1HPiQQ/v1yyQAAAFRJREFUGNOty0cO \
+    gDAMRNFJsNMbnfuflEiAxRrxd/OkwX+FAGTOsvVEGtiCQKwUUWcl4PXikZxrz8O36DQglaFXXkA7 \
+    kEimYctqtZbNeIO6Ojp86gQPPAIkuEaYXAAAAABJRU5ErkJggg=='
+);
+
+var nIconCode = Application.RegisterImageString(
+	'R0lGODlhEAAQAKIAAERERMzMzKOjo2ZmZufn51dXV3Nzc////yH5BAEHAAcALAAAAAAQABAAAAM1 \
+ 	eLrc/jBCMdQQkRJF7tNMhzFgIy4BEEDpqgjFZhbjAssc/QEyAdQmA0ABMOBMhF5Swmw6HQkAOw=='
+);
+
+var nIconSpoiler = Application.RegisterImageString(
+	'iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJ \
+    bWFnZVJlYWR5ccllPAAAAgdJREFUeNrEU89rE1EQns3a/EDq2lgE0QQ2LQRJSA9NIIVFtOg2gghe \
+    Qg+heDEnD976H+Qf6EEkILTklEMEL8bAipDASsBL7HqSBEMhRNBDShKzdPP8Zk1EevGQgwMf772d \
+    +b5582ZWEkLQIuahBW1hAQnmbmalXAJuAzoQAYKzuB9AG6gB74HBnDcXkCDw0OfzPdF1fT2Xy121 \
+    LOtio9HwslPTNDsWiw1LpdK3Wq32ZTKZFMF7zXm5BD/wLJVK7dfrda1SqUQdx1kJhULe4XBEDJC8 \
+    /I19HMOxzHG5sixnkPVdv9+fjEYjwTAMQ7AViy+Fpt0Ruv5A4FZi7udY5jD3AlR20+l0ENf32rbt \
+    1lUoFJDZoYOD5+55bS1OJyefae7nWOYg0S4LHDabzZXBYBD1wzhAVVUyDJO2tu65BL/fR0tL6h+B \
+    nzBwvjJX9ng8vU6nMzVN00kmk6uKoiyjXrKsTxSJbJCiBJHdou3tW65wu93u5fP5N3iLV9wVtwUQ \
+    4W6kA4HATiaTiWez2Xi3273WarWW2Z9IJE7D4XCvXC4fV6vVY3U8fntTiA+PplPBAjJwGbgCkSDE \
+    rmMN46zMOkRPHWcnKsQq6rUZaJ0D0hnWJr8BT9AY+I6HP8X1u9ibf0/bOtH9x3t7N85P4eHRkSP9 \
+    a1Tv/h7NF2dEm+d9yP5R+u9/4y8BBgAeV+c/GRjpjAAAAABJRU5ErkJggg=='
+);
+
+var nIconColor = Application.RegisterImageString(
+	'R0lGODlhEAAQALMAAB4eHpmZmf9JfN7e3l5eXsHBwU1NTf9ajf+Msjs7O2lpaf9mmXZ2dv9SheXl \
+    5f///yH5BAEHAA8ALAAAAAAQABAAAARF8MlJq704a6X0HIoxeE8QGAFJDAzhDUQRJGM2J3iaiRJj \
+    7ACDowAIYhzIJJKEQSyeh+ihQRVYBc+sdFq9CpxQKbXhXUQAADs='
+);
+
+var nIconParagraph = Application.RegisterImageString(
+	'R0lGODlhEAAQAKIAADMzM8zMzHZ2dlJSUrW1tUtLS+Xl5f///yH5BAEHAAcALAAAAAAQABAAAAM2 \
+ 	eLrc/jA+I4a1BFYbRoZDIR5FEAliQZoQNZbSEaiwFAAHwEZ3vkM9ncRAABgAn5ZhuYw5n4cEADs='
+);
+
+var nIconLanguage = Application.RegisterImageString(
+	'R0lGODlhEAAQAKIAADMzM8zMzIiIiFBQULCwsOXl5UFBQf///yH5BAEHAAcALAAAAAAQABAAAANh \
+    eLrcSoWRoQZhI5/MOz0FIRRBIAzlIJRO4HFBJVxuUJwkqpwGafzAX2wRIZUEhpJNciAEg5eH4aAM \
+    GFDKhQbA7XofAMEiEJ4MFQZAxAToFdIrRbtQ4CbpVi6Rzu/THYANCQA7'
+);
+
+var nIconList = Application.RegisterImageString(
+	'R0lGODlhEAAQAKIAACYmJqKiolNTU+Xl5Xd3d0dHRzo6Ov///yH5BAEHAAcALAAAAAAQABAAAAM3 \
+ 	eLrcGiK4KYhQImtRyItTKI5kUEjk0RVK4b5G/Bhoat9MQNuAAByDmBBALAwOBIBnwGw6j7hoAgA7'
+);
+
+var nIconOrderedList = Application.RegisterImageString(
+	'R0lGODlhEAAQAKIAADMzM729vXZ2dk5OTu/v7+Xl5UNDQ////yH5BAEHAAcALAAAAAAQABAAAAM8 \
+    eLrcKoO4eaIaOGOxLGUQ942fYIjkEQzXYLwwoARCkR6mEdw8PsiplY1gABiPAINEZTgQCtBoVPJD \
+    9UYJADs='
+);
+
+var nIconQuotation = Application.RegisterImageString(
+	'R0lGODlhEAAQAKIAAC0tLefn54SEhERERGNjY5+fnzk5Of///yH5BAEHAAcALAAAAAAQABAAAAMp \
+ eLrc/jDKSV0Y5dwMBVGehCljZBjf+UFAe7RAJABCMNdQoO965f9ASQIAOw=='
+);
+
+var nIconFontSize = Application.RegisterImageString(
+	'R0lGODlhEAAQALMAAB4eHszMzG9vb1FRUZycnEFBQYKCguXl5Ts7O97e3qWlpV5eXpKSkri4uExM \
+    TP///yH5BAEHAA8ALAAAAAAQABAAAARB8MlJq7046z2F4E8iDMkUDIFFKA4xOYtjLYmxbMkSEEX5 \
+    FItChYEoIhiSACJFcfgEMswAMDg0AFTMYcvdgr5gTgQAOw=='
+);
+
+var nIconSpace = Application.RegisterImageString(
+	'R0lGODlhEAAQAKIAADMzM9PT0319fczMzFJSUu7u7ubm5v///yH5BAEHAAcALAAAAAAQABAAAAMd \
+ 	eLrc/jDKSau9uIqggpAEdwQECJwAUURG665ZjCUAOw=='
+);
+
+var nIconLine = Application.RegisterImageString(
+	'iVBORw0KGgoAAAANSUhEUgAAABAAAAAQAQMAAAAlPW0iAAAABlBMVEUAAAACAgJ6224PAAAAAnRS \
+ 	TlMAeChNNDYAAAAPSURBVAjXY8AK/v9nwAEAMv0B/3hiGhwAAAAASUVORK5CYII='
+);
+
+var nIconImage = Application.RegisterImageString(
+	'R0lGODlhEAAQAMQAABtYTEWT/66/v+Xl5TptoLrX/yKvQZCiojBsdJG//yCbMEHnUnqy/////8zd \
+ 	3ViLvEynX9Xn/3mtwzmNSsXW1kmJazqYQuz39yHQN1jha6fM/5/Cv77Pz2aZzE+Jk////yH5BAEH \
+    AB8ALAAAAAAQABAAAAWE4CeOZGme5OCsbNuqTSzPs0M1Qa7rjKY1lBtjmCAWNZEI8CbRFJ6RJ1RJ \
+    4VwqlU1ym7x4OVYAYHLYUBwR76Vx4QguYgAC4alLDIbMRfAm+B8PHRIJCXkGe31/gB0QCgoZeBAb \
+    apQXBguYmAoCB52enROOGI4QHwOnqKkKowMoJBATpR8hADs='
+);
+
+var nIconTable = Application.RegisterImageString(
+	'R0lGODlhEAAQAMQAAB2IKeXl5bLDwyau8I6goIDN6T+TUPX5+XK+30HnUszd3S6vP0TM/4Xr/Kax \
+    seT09MXW1hrfK2GiZS6hO1XrZr3Ozja++DC5Qv///3rg8e74+GLN9E6zX165bC6CMv///yH5BAEH \
+    AB8ALAAAAAAQABAAAAWQYKCMZFmKWKquqwJhTMxYtDXcAwa9TNM3QEtmmNvBGJuCsoBoNnWQQ69w \
+    qB6i1cpVGyu4doqKWCvWTK1Xa0VT7n5343VFYG4UNHgNRNO5cDQCAg9uO4ULFAsPgYN2eRocC4cT \
+    CxwOgwxehRMJnJwTDhoPoqMPHRMTEacGDgStrq8AEQAEDh8Bt7i5Eh4SAR8hADs='
+);
+
+var nIconSmiley = Application.RegisterImageString(
+	'iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAMAAAAoLQ9TAAABCFBMVEUAAAAAAADPjwDzxUjoqQXlpQAA\
+    AAD80lX97KHwvlr501n54ILzzlTdp0TptTn11Wf00lvVmzPYni3lsijEiBbuvjSxdBnKigCUVQCfXwTQ\
+    kADEhADnpwDfnwCiYgCVVQCKTwDqqgDVlQC8fABUMADqqgDamgCwcACaWgBwQAAAAAD/8q7qqgCVVQAU\
+    DAAUDAAAAAAAAAD7xj+7iCL6wz78/Pn/65nnwVrvv0D6wTqwfBL/////7KL6zm36ymX9z0tmmczY0sUz\
+    ZpnlxGv+3mn5xlvjvFTwxVPjuk/mvErtuEr5wEj8ykP5vz/5vTjqsDbMmjLAjSfXoSa4hR6pdhD+55f+\
+    33391WDD7dBXAAAAMnRSTlMAGgr9vSUL/vr6+vDw8PDr6+vr2trZ2cq+vby8qKioqKKZmZlqTk5OJSUW\
+    /srKOjgqEYudxUMAAADdSURBVBjTRc7VzsJAFATgoS3u7u78CkuFKu6u7/8m7IYQvpuTM8kkA4qrl4Vv\
+    oVzn8GLPxb2uL5c3nrO/fiEoSbquS1JQYAmXD8mETG4TQuRQnrYa0elqOZfv8ny5mkYbQMVn8eJ48ViM\
+    Rd7yVYCMZ6uIQ8VShqKy9WSApLP34UwCWX5wHvQZevksUA3s1euFEHK5qvtAFWjGdgd1pGnaSD3sYk26\
+    oxDZrI8ncjquN5ECW99Kh2emYRjmLJxugWkXE3636fYnim0wnf/fWin1kyrV/mwOUI6O7a1Lgye26SMu\
+    pQSlKgAAAABJRU5ErkJggg=='
+);
+
+var nIconFont = Application.RegisterImageString(
+	'iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAMAAAAoLQ9TAAABJlBMVEXCwsIkJCQbGxsYGBirq6uurq7E\
+    xMS1tbWysrKoqKgmJiYiIiIODg64uLiKiop4eHh6enoODg4LCwsAAAD////z8/P29vb9/f3w8fHw8PD5\
+    +vrU09P4+Pjq8/Py8fHu7+/Gxsbx/v77/Pzv9vb19fXr6+vh29vb2trY2NjKysrNLy/u///0/v7w+vrx\
+    +Pjt9vbq8PDl5+fj4uLf4eHd3t7Ozs7dzc3azMzXxsbWw8Pevb3ms7PVoKDkiIjrXFznS0vVICDu9PTn\
+    7e3m6urd6urc5ubt5eXW1dXq0dHh0dHux8e9vb3Wtrbjra3ipqbopKSZmZnXmJjEjY3SiorxdXXfc3Pv\
+    cXHObW3cZGTFY2PjVVXeTU3bSkrPPz/XPT3HMDDoKyvoGhotx2ETAAAAFHRSTlP+ysHC9/b+9vb2zsXA\
+    +PXuy2VhVbuOlBMAAADdSURBVBjTRcrlVgJRGIXhTwdRAfs0E0wPQ4d02d3dev834ZlhLXh/PnvDJsxL\
+    5te3YA1No5RaAmXTsIwsoRKMdWYbrrq7KEGoEWD7pq8JCSuIECJ38/z5SiP5GBwHc/N09NiLYQnJOy8d\
+    v36OehrOxaDzsv30MBy3qzFQxllhOHkZv/v7uoQE5cy8/hrc/X4cHfBkBEapH14W6n/fhzUDFFile4Pw\
+    p+u9TcL7BovAcs9aLc/rtjudpnuhQAJhUSxio1ypVGtOToGNetP3gyA4ycoatxnYTqcWZqUyO/9xtSF3\
+    ihmS9QAAAABJRU5ErkJggg=='
+);
+
+//${ endregion }
+//////////////////////////////////////////////////////////////////////////
+
+function mul(str, num) {
+	return num ? Array(num + 1).join(str) : "";
+}
+
+if (!String.prototype.trim) {
+	(function() {
+		String.prototype.trim = function() {
+			return this.replace(/^[\s\uFEFF\xA0]+|[\s\uFEFF\xA0]+$/g, '');
+		};
+	})();
+}
+
+/*************************************************
+ *  URL command
+ *************************************************/
+
+var vURL = new Command("BBCode.Links", "Link selection", "Surround selection with [url] [/url]", nIconURL);
+vURL.onExecute = function() {
+	var dialog_template =
+		'@<dialog title="Insert Link" resizing="horizontal" modal="false" id="insert_link"> \
+	   <group> \
+		   <paragraph text="URL:" minwidth="6" align="left"/> \
+	   	   <edit id="url" cuebanner="Enter here a URL" autocomplete="url" minwidth="25"/> \
+	   	   <file_browser filter="All files (*.*)|*.*|HTML Files (*.html)|*.html||" align="right"/> \
+	   </group> \
+	   <group> \
+		   <paragraph text="Title:" minwidth="6" align="left" style="required" /> \
+	   	   <edit id="title" cuebanner="Enter here title" minwidth="25" required="true"/> \
+	   </group> \
+	   <group uniform="true" align="right|bottom"> \
+		   <button title="&amp;OK" returnval="ok" default="true"/> \
+		   <button title="&amp;Cancel" returnval="cancel"/> \
+	   </group> \
+	</dialog>@';
+	var varStorage = new Storage();
+	var sel = ActiveView.Selection;
+	varStorage.title = ActiveDocument.GetText(sel);
+	if (dialog(dialog_template, varStorage) == "ok") {
+		if (this.url != "") {
+			ActiveDocument.ReplaceText(sel, "[url=" + varStorage.url + "]" + varStorage.title + "[/url]", AddUndoActionType("URL selection"));
+		} else {
+			ActiveView.Position = ActiveDocument.ReplaceText(sel, "[url]" + varStorage.title + "[/url]", AddUndoActionType("URL selection"));
+			if (sel.IsEmpty) ActiveView.Position = new Position(sel.top, sel.left + 5);
+		}
+	}
+}
+vURL.onEnabled = function() {
+	return ActiveDocument != null && ActiveDocument.ReadOnly != true;
+}
+
+/*************************************************
+ *  EMAIL command
+ *************************************************/
+
+var vEmail = new Command("BBCode.Email", "Email selection", "Surround selection with [email] [/email]", nIconEmail);
+vEmail.onExecute = function() {
+	var sel = ActiveView.Selection;
+	ActiveView.Position = ActiveDocument.ReplaceText(sel, "[email]" + ActiveDocument.GetText(sel) + "[/email]", AddUndoActionType("Email selection"));
+	if (sel.IsEmpty) ActiveView.Position = new Position(sel.top, sel.left + 7);
+}
+vEmail.onEnabled = function() {
+	return ActiveDocument != null && ActiveDocument.ReadOnly != true;
+}
+
+/*************************************************
+ *  NOBBCode command
+ *************************************************/
+
+var vNobbcode = new Command("BBCode.Nobbcode", "NoBB selection", "Surround selection with [nobb] [/nobb]", nIconNobb);
+vNobbcode.onExecute = function() {
+	var sel = ActiveView.Selection;
+	ActiveDocument.ReplaceText(sel, "[nobb]" + ActiveDocument.GetText(sel) + "[/nobb]", AddUndoActionType("NoBB selection"));
+	if (sel.IsEmpty) ActiveView.Position = new Position(sel.top, sel.left + 6);
+}
+vNobbcode.onEnabled = function() {
+	return ActiveDocument != null && ActiveDocument.ReadOnly != true;
+}
+
+/*************************************************
+ *  IMAGE command
+ *************************************************/
+
+var vInsertImageCMD = new Command("BBCode.Image", "Insert image...", "Insert image tag", nIconImage);
+vInsertImageCMD.onExecute = function() {
+	var sel = ActiveView.Selection;
+	ActiveDocument.ReplaceText(sel, "[img][/img]", AddUndoActionType("Insert image"));
+}
+vInsertImageCMD.onEnabled = function() {
+	return ActiveDocument != null && ActiveDocument.ReadOnly != true;
+}
+
+/*************************************************
+ *  TABLE command
+ *************************************************/
+
+var vInsertTabeCMD = new Command("BBCode.Table", "Insert table...", "Insert table tag", nIconTable);
+vInsertTabeCMD.onExecute = function() {
+	var dialog_template =
+		'@<dialog title="Configure Table" resizing="horizontal" modal="false" id="table"> \
+	   <group> \
+		   <paragraph text="Rows (TR):" minwidth="4" style="required" align="left"/> \
+	   	   <history_edit id="rows" cuebanner="Rows" minwidth="4" required="true"/> \
+	   </group> \
+	   <group> \
+			  <paragraph text="Cells (TD):" minwidth="4" style="required" align="left"/> \
+			  <history_edit id="cells" cuebanner="Cells" minwidth="4" required="true"/> \
+		  </group> \
+	   <group uniform="true" align="right|bottom"> \
+		   <button title="&amp;OK" returnval="ok" default="true"/> \
+		   <button title="&amp;Cancel" returnval="cancel"/> \
+	   </group> \
+	</dialog>@';
+	var sel = ActiveView.Selection;
+	var lb = ActiveDocument.LineBreak;
+	var varStorage = new Storage();
+	varStorage.rows = 3;
+	varStorage.cells = 3;
+	if (dialog(dialog_template, varStorage) == "ok" && parseInt(varStorage.rows) > 0 && parseInt(varStorage.cells) > 0) {
+		ActiveDocument.ReplaceText(sel, "[table]" + lb + mul("\t[tr]" + lb + mul("\t\t[td][/td]" + lb, parseInt(varStorage.cells)) + "\t[/tr]" + lb, parseInt(varStorage.rows)) + "[/table]" + lb, AddUndoActionType("Insert table"));
+	}
+}
+vInsertTabeCMD.onEnabled = function() {
+	return ActiveDocument != null && ActiveDocument.ReadOnly != true;
+}
+
+/*************************************************
+ *  SIZE command
+ *************************************************/
+
+var vInsertSizeCMD = new Command("BBCode.Size", "Insert size...", "Interactively insert text size", nIconFontSize);
+
+// define execute handler for command
+vInsertSizeCMD.onExecute = function() {
+	var dialog_template =
+		'@<dialog title="Insert Size" resizing="horizontal" modal="false" id="size"> \
+	   <columnbreak/> \
+	   <group> \
+		   <paragraph text="Size:" minwidth="4" style="required" align="left"/> \
+	   	   <edit id="size" cuebanner="Enter here size" minwidth="4"/> \
+	   </group> \
+	   <group uniform="true" align="right|bottom"> \
+		   <button title="&amp;OK" returnval="ok" default="true"/> \
+		   <button title="&amp;Cancel" returnval="cancel"/> \
+	   </group> \
+	</dialog>@';
+
+	var varStorage = new Storage();
+	var sel = ActiveView.Selection;
+	varStorage.title = ActiveDocument.GetText(sel);
+	if (dialog(dialog_template, varStorage) == "ok") {
+		var linkPattern = "[size=" + varStorage.size + "]" + varStorage.title + "[/size]";
+		ActiveDocument.ReplaceText(sel, linkPattern, AddUndoActionType("Surround with [size]"));
+	}
+}
+
+// define enable state handler for command
+vInsertSizeCMD.onEnabled = function() {
+	return ActiveDocument != null && ActiveDocument.ReadOnly != true;
+}
+
+// register the command as global, to be able assign shortcuts to it
+Application.RegisterCommand(vInsertSizeCMD);
+
+
+/*************************************************
+ *  NBSP command
+ *************************************************/
+
+var vSpaceCMD = new Command("BBCode.Space", "Insert [space]", "Insert [space]", nIconSpace);
+vSpaceCMD.onExecute = function() {
+	var sel = ActiveView.Selection;
+	ActiveDocument.ReplaceText(sel, "[space]", AddUndoActionType("Insert [space]"));
+}
+vSpaceCMD.onEnabled = function() {
+	return ActiveDocument != null && ActiveDocument.ReadOnly != true;
+}
+
+/*************************************************
+ *  BLOCKQUOTE command
+ *************************************************/
+
+var vBlockquote = new Command("BBCode.Blockquote", "Quote selection", "Surround selection with [quote] [/quote]", nIconQuotation);
+vBlockquote.onExecute = function() {
+	var sel = ActiveView.Selection;
+	ActiveDocument.ReplaceText(sel, "[quote]" + ActiveDocument.GetText(sel) + "[/quote]", AddUndoActionType("Blockquote selection"));
+	if (sel.IsEmpty) ActiveView.Position = new Position(sel.top, sel.left + 7);
+}
+vBlockquote.onEnabled = function() {
+	return ActiveDocument != null && ActiveDocument.ReadOnly != true;
+}
+
+/*************************************************
+ *  CODE command
+ *************************************************/
+
+var vCode = new Command("BBCode.Code", "Code selection", "Surround selection with [code] [/code]", nIconCode);
+vCode.onExecute = function() {
+	var sel = ActiveView.Selection;
+	ActiveDocument.ReplaceText(sel, "[code]" + ActiveDocument.GetText(sel) + "[/code]", AddUndoActionType("Code selection"));
+	if (sel.IsEmpty) ActiveView.Position = new Position(sel.top, sel.left + 6);
+}
+vCode.onEnabled = function() {
+	return ActiveDocument != null && ActiveDocument.ReadOnly != true;
+}
+
+/*************************************************
+ *  SPOILER command
+ *************************************************/
+
+var vSpoiler = new Command("BBCode.Spoiler", "Spoiler selection", "Surround selection with [spoiler] [/spoiler]", nIconSpoiler);
+vSpoiler.onExecute = function() {
+	var sel = ActiveView.Selection;
+	ActiveDocument.ReplaceText(sel, "[spoiler]" + ActiveDocument.GetText(sel) + "[/spoiler]", AddUndoActionType("Spoiler selection"));
+	if (sel.IsEmpty) ActiveView.Position = new Position(sel.top, sel.left + 9);
+}
+vSpoiler.onEnabled = function() {
+	return ActiveDocument != null && ActiveDocument.ReadOnly != true;
+}
+
+/*************************************************
+ *  Break command
+ *************************************************/
+
+var vBreakCMD = new Command("BBCode.Brake", "Insert [br]", "", nIconParagraph);
+vBreakCMD.onExecute = function() {
+	var sel = ActiveView.Selection;
+	ActiveView.Position = ActiveDocument.ReplaceText(sel, "[br]", AddUndoActionType("Insert [br]"));
+}
+vBreakCMD.onEnabled = function() {
+	return ActiveDocument != null && ActiveDocument.ReadOnly != true;
+}
+
+/*************************************************
+ *  LINE command
+ *************************************************/
+
+var vLine = new Command("BBCode.Line", "Insert [hr]", "", nIconLine);
+vLine.onExecute = function() {
+	var sel = ActiveView.Selection;
+	ActiveView.Position = ActiveDocument.ReplaceText(sel, "[hr]", AddUndoActionType("Insert [hr]"));
+}
+vLine.onEnabled = function() {
+	return ActiveDocument != null && ActiveDocument.ReadOnly != true;
+}
+
+/*************************************************
+ *  LIST command
+ *************************************************/
+
+var vList = new Command("BBCode.ListUnordered", "Unordered list", "Surround selection with [ul] [/ul]", nIconList);
+vList.onExecute = function() {
+	// in case of selected text, we need to split it in lines, and find out number of items from line numbers
+	// in other case, when noting selected, ask user
+	var sel = ActiveView.Selection;
+	var lb = ActiveDocument.LineBreak;
+	var text = "";
+	if (sel.IsEmpty) {
+		text = mul("\t[li][/li]" + lb, parseInt(prompt("Enter items Count", "5")));
+	} else {
+		var lines = ax2js(ActiveDocument.GetLines(sel, false));
+		for (var i = 0; i < lines.length; i++) {
+			var line = lines[i].trim();
+			if (line.length)
+				text += "\t[li]" + line + "[/li]" + lb;
+		}
+	}
+	ActiveView.Position = ActiveDocument.ReplaceText(sel, "[ul]" + lb + text + "[/ul]" + lb, AddUndoActionType("Convert selection to unordered list"));
+	if (sel.IsEmpty) ActiveView.Position = new Position(sel.top + 1, sel.left + 3 + lb.length);
+}
+vList.onEnabled = function() {
+	return ActiveDocument != null && ActiveDocument.ReadOnly != true;
+}
+
+
+/*************************************************
+ *  ORDERED LIST command
+ *************************************************/
+
+var vOrderedList = new Command("BBCode.ListOrdered", "Ordered list", "Surround selection with [ol] [/ol]", nIconOrderedList);
+vOrderedList.onExecute = function() {
+	// in case of selected text, we need to split it in lines, and find out number of items from line numbers
+	// in other case, when noting selected, ask user
+	var sel = ActiveView.Selection;
+	var lb = ActiveDocument.LineBreak;
+	var text = "";
+	if (sel.IsEmpty) {
+		text = mul("\t[li][/li]" + lb, parseInt(prompt("Enter items Count", "5")));
+	} else {
+		var lines = ax2js(ActiveDocument.GetLines(sel, false));
+		for (var i = 0; i < lines.length; i++) {
+			var line = lines[i].trim();
+			if (line.length)
+				text += "\t[li]" + line + "[/li]" + lb;
+		}
+	}
+	ActiveView.Position = ActiveDocument.ReplaceText(sel, "[ol]" + lb + text + "[/ol]" + lb, AddUndoActionType("Convert selection to unordered list"));
+	if (sel.IsEmpty) ActiveView.Position = new Position(sel.top + 1, sel.left + 3 + lb.length);
+}
+vOrderedList.onEnabled = function() {
+	return ActiveDocument != null && ActiveDocument.ReadOnly != true;
+}
+
+/*************************************************
+ *  MONOSPACED (Teletype) command
+ *************************************************/
+
+var vMonospaced = new Command("BBCode.Monospaced", "Monospaced selection", "Surround selection with [tt] [/tt]", nIconMonospaced);
+vMonospaced.onExecute = function() {
+	var sel = ActiveView.Selection;
+	ActiveView.Position = ActiveDocument.ReplaceText(sel, "[tt]" + ActiveDocument.GetText(sel) + "[/tt]", AddUndoActionType("Monospaced selection"));
+	if (sel.IsEmpty) ActiveView.Position = new Position(sel.top, sel.left + 4);
+}
+vMonospaced.onEnabled = function() {
+	return ActiveDocument != null && ActiveDocument.ReadOnly != true;
+}
+
+/*************************************************
+ *  BOLD command
+ *************************************************/
+
+var vBold = new Command("BBCode.Bold", "Bold selection", "Surround selection with [B] [/B]", nIconBold);
+vBold.onExecute = function() {
+	var sel = ActiveView.Selection;
+	ActiveView.Position = ActiveDocument.ReplaceText(sel, "[b]" + ActiveDocument.GetText(sel) + "[/b]", AddUndoActionType("Bold selection"));
+	if (sel.IsEmpty) ActiveView.Position = new Position(sel.top, sel.left + 3);
+}
+vBold.onEnabled = function() {
+	return ActiveDocument != null && ActiveDocument.ReadOnly != true;
+}
+
+/*************************************************
+ *  ITALIC command
+ *************************************************/
+
+var vItalic = new Command("BBCode.Italic", "Italic selection", "Surround selection with [i] [/i]", nIconItalic);
+vItalic.onExecute = function() {
+	var sel = ActiveView.Selection;
+	ActiveView.Position = ActiveDocument.ReplaceText(sel, "[i]" + ActiveDocument.GetText(sel) + "[/i]", AddUndoActionType("Italic selection"));
+	if (sel.IsEmpty) ActiveView.Position = new Position(sel.top, sel.left + 3);
+}
+vItalic.onEnabled = function() {
+	return ActiveDocument != null && ActiveDocument.ReadOnly != true;
+}
+
+/*************************************************
+ *  UNDERLINE command
+ *************************************************/
+
+var vUnderline = new Command("BBCode.Underline", "Underline selection", "Surround selection with [u] [/u]", nIconUnderline);
+vUnderline.onExecute = function() {
+	var sel = ActiveView.Selection;
+	ActiveView.Position = ActiveDocument.ReplaceText(sel, "[u]" + ActiveDocument.GetText(sel) + "[/u]", AddUndoActionType("Underline selection"));
+	if (sel.IsEmpty) ActiveView.Position = new Position(sel.top, sel.left + 3);
+}
+vUnderline.onEnabled = function() {
+	return ActiveDocument != null && ActiveDocument.ReadOnly != true;
+}
+
+/*************************************************
+ *  STRIKETHROUGH command
+ *************************************************/
+
+var vStrikethrough = new Command("BBCode.Strikethrough", "Strike-through selection", "Surround selection with [s] [/s]", nIconStrike);
+vStrikethrough.onExecute = function() {
+	var sel = ActiveView.Selection;
+	ActiveView.Position = ActiveDocument.ReplaceText(sel, "[s]" + ActiveDocument.GetText(sel) + "[/s]", AddUndoActionType("Strikethrough selection"));
+	if (sel.IsEmpty) ActiveView.Position = new Position(sel.top, sel.left + 3);
+}
+vStrikethrough.onEnabled = function() {
+	return ActiveDocument != null && ActiveDocument.ReadOnly != true;
+}
+
+/*************************************************
+ *  SUB command
+ *************************************************/
+
+var vSub = new Command("BBCode.Sub", "Subscript selection", "Surround selection with [sub] [/sub]", nIconSub);
+vSub.onExecute = function() {
+	var sel = ActiveView.Selection;
+	ActiveView.Position = ActiveDocument.ReplaceText(sel, "[sub]" + ActiveDocument.GetText(sel) + "[/sub]", AddUndoActionType("Subscript selection"));
+	if (sel.IsEmpty) ActiveView.Position = new Position(sel.top, sel.left + 5);
+}
+vSub.onEnabled = function() {
+	return ActiveDocument != null && ActiveDocument.ReadOnly != true;
+}
+
+/*************************************************
+ *  SUP command
+ *************************************************/
+
+var vSup = new Command("BBCode.Sup", "Superscript selection", "Surround selection with [sup] [/sup]", nIconSup);
+vSup.onExecute = function() {
+	var sel = ActiveView.Selection;
+	ActiveView.Position = ActiveDocument.ReplaceText(sel, "[sup]" + ActiveDocument.GetText(sel) + "[/sup]", AddUndoActionType("Superscript selection"));
+	if (sel.IsEmpty) ActiveView.Position = new Position(sel.top, sel.left + 5);
+}
+vSup.onEnabled = function() {
+	return ActiveDocument != null && ActiveDocument.ReadOnly != true;
+}
+
+
+/*************************************************
+ *  ALIGN LEFT command
+ *************************************************/
+
+var vAlignLeft = new Command("BBCode.AlignLeft", "Align selection left", "Surround selection with [left] [/left]", nIconAlignLeft);
+vAlignLeft.onExecute = function() {
+	var sel = ActiveView.Selection;
+	ActiveView.Position = ActiveDocument.ReplaceText(sel, "[left]" + ActiveDocument.GetText(sel) + "[/left]", AddUndoActionType("Align Left"));
+	if (sel.IsEmpty) ActiveView.Position = new Position(sel.top, sel.left + 6);
+}
+vAlignLeft.onEnabled = function() {
+	return ActiveDocument != null && ActiveDocument.ReadOnly != true;
+}
+
+/*************************************************
+ *  ALIGN CENTER command
+ *************************************************/
+
+var vAlignCenter = new Command("BBCode.AlignCenter", "Align selection center", "Surround selection with [center] [/center]", nIconAlignCenter);
+vAlignCenter.onExecute = function() {
+	var sel = ActiveView.Selection;
+	ActiveView.Position = ActiveDocument.ReplaceText(sel, "[center]" + ActiveDocument.GetText(sel) + "[/center]", AddUndoActionType("Align Center"));
+	if (sel.IsEmpty) ActiveView.Position = new Position(sel.top, sel.left + 8);
+}
+vAlignCenter.onEnabled = function() {
+	return ActiveDocument != null && ActiveDocument.ReadOnly != true;
+}
+
+/*************************************************
+ *  ALIGN RIGHT command
+ *************************************************/
+
+var vAlignRight = new Command("BBCode.AlignRight", "Align selection right", "Surround selection with [right] [/right]", nIconAlignRight);
+vAlignRight.onExecute = function() {
+	var sel = ActiveView.Selection;
+	ActiveView.Position = ActiveDocument.ReplaceText(sel, "[right]" + ActiveDocument.GetText(sel) + "[/right]", AddUndoActionType("Align Right"));
+	if (sel.IsEmpty) ActiveView.Position = new Position(sel.top, sel.left + 7);
+}
+vAlignRight.onEnabled = function() {
+	return ActiveDocument != null && ActiveDocument.ReadOnly != true;
+}
+
+/*************************************************
+ *  ALIGN JUSTIFY command
+ *************************************************/
+
+var vAlignJustify = new Command("BBCode.AlignJustify", "Justify selection", "Surround selection with [justify] [/justify]", nIconAlignJustify);
+vAlignJustify.onExecute = function() {
+	var sel = ActiveView.Selection;
+	ActiveView.Position = ActiveDocument.ReplaceText(sel, "[justify]" + ActiveDocument.GetText(sel) + "[/justify]", AddUndoActionType("Justify selection"));
+	if (sel.IsEmpty) ActiveView.Position = new Position(sel.top, sel.left + 9);
+}
+vAlignJustify.onEnabled = function() {
+	return ActiveDocument != null && ActiveDocument.ReadOnly != true;
+}
+
+/*************************************************
+ *  Color Menu command
+ *************************************************/
+
+var vColor = new Command("BBCode.Color", "Color selection", "Surround selection with [color] [/color]", nIconColor);
+vColor.onExecute = function() {
+	var dialog_template =
+	'@<dialog title="Select color" resizing="horizontal" modal="false" id="color"> \
+	   <group> \
+		   <paragraph text="Color:" minwidth="10" align="left"/> \
+		   <edit id="color" cuebanner="Enter here hex color" minwidth="25"/> \
+		   <color_browser format="hex" align="right"/> \
+	   </group> \
+	   <group uniform="true" align="right|bottom"> \
+		   <button title="&amp;OK" returnval="ok" default="true"/> \
+		   <button title="&amp;Cancel" returnval="cancel"/> \
+	   </group> \
+	</dialog>@';
+	var sel = ActiveView.Selection;
+	var varStorage = new Storage();
+	if (dialog(dialog_template, varStorage) == "ok") {
+		ActiveView.Position = ActiveDocument.ReplaceText(sel, "[color=\"" + varStorage.color + "\"]" + ActiveDocument.GetText(sel) + "[/color]", AddUndoActionType("Color selection"));
+	}
+}
+vColor.onEnabled = function() {
+	return ActiveDocument != null && ActiveDocument.ReadOnly != true;
+}
+
+function CreateColorCommand(clrName, clrHex) {
+	var vColor = new Command("", "Color selection", "Surround selection with" + clrName);
+	vColor.onExecute = function() {
+		var sel = ActiveView.Selection;
+		ActiveView.Position = ActiveDocument.ReplaceText(sel, "[color=" + clrName + "]" + ActiveDocument.GetText(sel) + "[/color]", AddUndoActionType("Color selection with " + clrName));
+	}
+	vColor.onEnabled = function() {
+		return ActiveDocument != null && ActiveDocument.ReadOnly != true;
+	}
+	vColor.onTextColor = function() {
+		return clrHex;
+	}
+	return vColor;
+}
+
+/*************************************************
+ *  Font Menu command
+ *************************************************/
+
+var vFont = new Command("BBCode.FontFace", "FontFace", "Surround selection with [font] [/font]", nIconFont);
+vFont.onExecute = function() {
+	var dialog_template =
+	'@<dialog title="Select font face" resizing="horizontal" modal="false" id="font"> \
+	   <group> \
+			<paragraph text="Font:" minwidth="10" align="left"/> \
+			<edit id="font" cuebanner="Enter here font name" minwidth="25"/> \
+			<font_browser properties="family" align="right"/> \
+	   </group> \
+	   <group uniform="true" align="right|bottom"> \
+		   <button title="&amp;OK" returnval="ok" default="true"/> \
+		   <button title="&amp;Cancel" returnval="cancel"/> \
+	   </group> \
+	</dialog>@';
+	var sel = ActiveView.Selection;
+	var varStorage = new Storage();
+	if (dialog(dialog_template, varStorage) == "ok") {
+		var fontFace = varStorage.font.replace(/^font-family\:\s*(.+?);$/gi, "$1");
+		if (fontFace === "") fontFace = varStorage.font; 
+		ActiveView.Position = ActiveDocument.ReplaceText(sel, "[font=\"" + fontFace + "\"]" + ActiveDocument.GetText(sel) + "[/font]", AddUndoActionType("Font Face selection"));
+	}
+}
+vFont.onEnabled = function() {
+	return ActiveDocument != null && ActiveDocument.ReadOnly != true;
+}
+
+function CreateFontCommand(fontName) {
+	var vFont = new Command("", fontName, "Surround selection with" + fontName);
+	vFont.onExecute = function() {
+		var sel = ActiveView.Selection;
+		ActiveView.Position = ActiveDocument.ReplaceText(sel, "[font=" + fontName + "]" + ActiveDocument.GetText(sel) + "[/font]", AddUndoActionType("Font selection with " + fontName));
+	}
+	vFont.onEnabled = function() {
+		return ActiveDocument != null && ActiveDocument.ReadOnly != true;
+	}
+	return vFont;
+}
+
+/*************************************************
+ *  Smiley command
+ *************************************************/
+function CreateEmoCommand(emoName, emoText, emoIcon) {
+	var vSmiley = new Command("BBCode." + emoName, emoName, "Insert" + emoName, emoIcon);
+	vSmiley.onExecute = function() {
+		var sel = ActiveView.Selection;
+		ActiveDocument.ReplaceText(sel, emoText, AddUndoActionType("Insert " + emoName));
+	}
+	vSmiley.onEnabled = function() {
+		return ActiveDocument != null && ActiveDocument.ReadOnly != true;
+	}
+	return vSmiley;
+}
+
+////////////////////////////////////////////////////////////////////////
+// Initialize BBCode Toolbar
+Application.onInitToolbars = function() {
+	var MyToolbar = this.GetToolBar("BBCode", true);
+	MyToolbar.Name = "BBCode Tools";
+	MyToolbar.AddButton(vNobbcode);
+	MyToolbar.AddButton();
+	MyToolbar.AddButton(vURL);
+	MyToolbar.AddButton(vEmail);
+	MyToolbar.AddButton();
+	MyToolbar.AddButton(vInsertImageCMD);
+	MyToolbar.AddButton(vInsertTabeCMD);
+	MyToolbar.AddButton(vList);
+	MyToolbar.AddButton(vOrderedList);
+	MyToolbar.AddButton();
+	MyToolbar.AddButton(vBlockquote);
+	MyToolbar.AddButton(vCode);
+	MyToolbar.AddButton(vSpoiler);
+	MyToolbar.AddButton(CreateEmoCommand("Smiley", ":)", nIconSmiley), eToolButtonStyleDropMenu);
+	MyToolbar.AddButton();
+	MyToolbar.AddButton(vBold);
+	MyToolbar.AddButton(vItalic);
+	MyToolbar.AddButton(vUnderline);
+	MyToolbar.AddButton(vStrikethrough);
+	MyToolbar.AddButton(vSub);
+	MyToolbar.AddButton(vSup);
+	MyToolbar.AddButton(vMonospaced);
+	MyToolbar.AddButton(vColor, eToolButtonStyleDropMenu);
+	MyToolbar.AddButton(vFont, eToolButtonStyleDropMenu);
+	MyToolbar.AddButton();
+	MyToolbar.AddButton(vInsertSizeCMD);
+	MyToolbar.AddButton();
+	MyToolbar.AddButton(vAlignLeft);
+	MyToolbar.AddButton(vAlignCenter);
+	MyToolbar.AddButton(vAlignRight);
+	MyToolbar.AddButton(vAlignJustify);
+	MyToolbar.AddButton();
+	MyToolbar.AddButton(vSpaceCMD);
+	MyToolbar.AddButton(vBreakCMD);
+	MyToolbar.AddButton(vLine);
+}
+
+////////////////////////////////////////////////////////////////////////
+// Create new main Menu for BBCode
+Application.onInitMainMenu = function(bUpdate) {
+	if (bUpdate == false) {
+		var menuBBCode = this.InsertSubMenu(this.ItemCount - 4, "BBCode");
+		if (menuBBCode != null) {
+			menuBBCode.AddItem("", vURL);
+			menuBBCode.AddItem("", vEmail);
+			menuBBCode.AddItem("");
+			menuBBCode.AddItem("", vList);
+			menuBBCode.AddItem("", vOrderedList);
+			menuBBCode.AddItem("", vInsertImageCMD);
+			menuBBCode.AddItem("", vInsertTabeCMD);
+			menuBBCode.AddItem("");
+			menuBBCode.AddItem("", vBlockquote);
+			menuBBCode.AddItem("", vCode);
+			menuBBCode.AddItem("", vSpoiler);
+			menuBBCode.AddItem("");
+			menuBBCode.AddItem("", vBold);
+			menuBBCode.AddItem("", vItalic);
+			menuBBCode.AddItem("", vUnderline);
+			menuBBCode.AddItem("", vStrikethrough);
+			menuBBCode.AddItem("", vSub);
+			menuBBCode.AddItem("", vSup);
+			menuBBCode.AddItem("", vMonospaced);
+			menuBBCode.AddItem("");
+			menuBBCode.AddItem("", vInsertSizeCMD);
+			menuBBCode.AddItem("");
+			var menuAlign = menuBBCode.AddSubMenu("Align");
+			menuAlign.AddItem("Left", vAlignLeft);
+			menuAlign.AddItem("Center", vAlignCenter);
+			menuAlign.AddItem("Right", vAlignRight);
+			menuAlign.AddItem("Justify", vAlignJustify);
+			menuBBCode.AddItem("");
+			menuBBCode.AddItem("", vSpaceCMD);
+			menuBBCode.AddItem("", vBreakCMD);
+			menuBBCode.AddItem("", vLine);
+		}
+	}
+}
+
+////////////////////////////////////////////////////////////////////////
+// UI Events handlers
+Application.onMenuCreate = function(command) {
+	if (command == "BBCode.Color") {
+		this.AddItem("Black", CreateColorCommand("Black", 0x000000));
+		this.AddItem("Red", CreateColorCommand("Red", 0x0000FF));
+		this.AddItem("Yellow", CreateColorCommand("Yellow", 0x00FFFF));
+		this.AddItem("Pink", CreateColorCommand("Pink", 0xCBC0FF));
+		this.AddItem("Green", CreateColorCommand("Green", 0x00FF00));
+		this.AddItem("Orange", CreateColorCommand("Orange", 0x00A5FF));
+		this.AddItem("Purple", CreateColorCommand("Purple", 0x800080));
+		this.AddItem("Blue", CreateColorCommand("Blue", 0xFF0000));
+		this.AddItem("Beige", CreateColorCommand("Beige", 0xDCF5F5));
+		this.AddItem("Brown", CreateColorCommand("Brown", 0x2A2AA5));
+		this.AddItem("Teal", CreateColorCommand("Teal", 0x808000));
+		this.AddItem("Navy", CreateColorCommand("Navy", 0x800000));
+		this.AddItem("Maroon", CreateColorCommand("Maroon", 0x000080));
+		this.AddItem("Lime Green", CreateColorCommand("Lime Green", 0x32CD32));
+		this.AddItem("White", CreateColorCommand("White", 0xFFFFFF));
+	} else 	if (command == "BBCode.FontFace") {
+		this.AddItem("", CreateFontCommand("Verdana"));
+		this.AddItem("", CreateFontCommand("Times New Roman"));
+		this.AddItem("", CreateFontCommand("Comic Sans MS"));
+		this.AddItem("", CreateFontCommand("Arial"));
+		this.AddItem("", CreateFontCommand("Courier New"));
+		this.AddItem("", CreateFontCommand("Tahoma"));
+		this.AddItem("", CreateFontCommand("Century"));
+		this.AddItem("", CreateFontCommand("Autumn"));
+		this.AddItem("", CreateFontCommand("Lucida Console"));
+		this.AddItem("", CreateFontCommand("Rockwell"));
+		this.AddItem("", CreateFontCommand("Scribble"));
+		this.AddItem("", CreateFontCommand("Trebuchet"));
+	} else if (command == "BBCode.Smiley") {
+		this.AddItem("Sad", CreateEmoCommand("Sad", ":(", Application.RegisterImageString(
+		'iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAMAAAAoLQ9TAAAA/1BMVEUAAAAAAADPjwDXnTDoqQXlpQAA\
+		AAD80lX97KHwvlr501n2x0r54ILzzlTdp0TptTn11Wf00lvlsijEiBbuvjSxdBnKigCfXwSUVADQkADE\
+		hADnpwDfnwCiYgCVVQCKTwDqqgDVlQC8fABUMADqqgDamgCwcAAUDACaWgBwQAAAAAAAAAD/8q74x2Lq\
+		qgCVVQAAAAD7xj/5vz76wjv6w0f6wj/8/Pn6xlj6wUbvv0D/7KL/6Zj/4Xr6zGf9z0u7iCJmmcz/7Jkz\
+		Zpn6zmz+3mnxzWnuzGnyxF3duFzwxVPww0fZr0fqtkT8ykPbqULcsEDMoD35vTjFlS36zm791WCcWSV+\
+		AAAAMXRSTlMAGgrrvSUU/vr6+vrw8PDw6+va2tnZyr29vLyoqKioopmZmWpOTk44JSULBv7+ysoqxEAc\
+		sAAAANxJREFUGNNFzlVyw0AAA1Bl7TjMzMzF9dYMYeb2/mepdzKZvB+N9CV4SLcpfojNLsGDv5KNBt+C\
+		0WzF/+hicmYahmHOkiJfSDVlra9bc3tdW6kqAXrp5eV+WFmrw/2yTPeAVszZK/Pd326u7J1YCyiFT7oy\
+		1R19quincAnIB75fAnmgHJFl+YfzMlIG2okbpRpjTKP0lmgD/Qyl7Oi67pFRmukDpCZo6nljb86qJtT4\
+		+2FBUO3F78JWhcIQ3Kiei4feQ/FcfcTrRPoadBrFz2KjM/CN4RlLvidpAvwD7fwimY+e6BQAAAAASUVO\
+		RK5CYII=')));
+
+		this.AddItem("Wink", CreateEmoCommand("Wink", ";)", Application.RegisterImageString(
+		'iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAMAAAAoLQ9TAAABHVBMVEUAAAAAAADPjwDoqQXlpQAAAAD8\
+    	0lX97KHwvlr501n2x0r54ILzzlTdp0TptTn11Wf00lvVmzPYni3lsijEiBbuvjSxdBnKigCfXwSUVADQ\
+    	kADEhADnpwDfnwCiYgCVVQCKTwDqqgDVlQC8fABUMADqqgDamgCwcAAUDACaWgBwQAAAAAD/8q7qqgCV\
+    	VQAAAAAAAAD7xj/6wTu7iCL/65n/4Xz6xlX6w0b6wz/5vz//7KL6zm36ymX9z0vvvz/5vzvGkin8/Pn+\
+    	55b+3mn5xlvnwVrju1H5wEjww0f8ykPcsEDjrj35vTjbqjjJlzBmmcwzZpn+5Y3lxGvtyWP91WDwxVPm\
+    	vErjskrruEn6v0DrtDzMnjfapTW8iiS9iiOg4nuCAAAAMXRSTlMAGQq9JQv++vr6+vDw8PDr6+vr2trZ\
+    	2cq9vby8qKioqKKZmZlqTk5OOCUlE/7KyiohzZY5KQAAAOFJREFUGNNFzuVuw0AAA2A3KTMzMwzvkmzh\
+    	lLljXvv+j9GLqqrfP1uyZDBcq8Zf87UWhxNnMRXwXHkCqaLzlPmIICiKIggR3m64UnRK6eto9CKK0RJb\
+    	tRPjz9lsKopvf6txog3Ug/pi+PzxvrK2Cz1YB/K+pTF8MvQtpcbSlwcy7vsLdwYo+Akhj4x5IMRfABrh\
+    	jfnzwPxa5ibcADpJWf5fS9K3tZblZIf9KMfn0o7ud1/SPF623/eysYmmqqo2iWV7sPUr6ZBX84bSlT5s\
+    	jttus5q7yVWb3TsXGNfAcTZgxRFRqyPZ0dNgLQAAAABJRU5ErkJggg==')));
+	}
+}

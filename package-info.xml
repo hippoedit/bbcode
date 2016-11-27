@@ -1,0 +1,36 @@
+<?xml version="1.0"?>
+<!DOCTYPE package-info SYSTEM "http://www.hippoedit.com/xml/package-info">
+<package-info xmlns="http://www.hippoedit.com/xml/package-info" xmlns:smf="http://www.hippoedit.com/">
+	<id>5ACBAFF9-6A43-44D5-BDA1-4E647A51F6DF</id>
+	<name>BBCode Tools</name>	
+	<version>1.0.0.0</version>
+	<description>BBCode Tools for HippoEDIT</description>
+	<author>Alexandr Cojocari</author>
+	<email>alexandr.cojocari@gmail.com</email>
+	<homepage>http://wiki.hippoedit.com/plugins/bbcode-tools</homepage>
+	<memo/>
+
+	<!-- Common Install actions -->
+	<install>
+		<!-- Read me -->
+		<readme type="inline">This will install BBCode Tools plugin for HippoEDIT.</readme>
+
+		<require-file name="bbcode_tools.hejs" destination="%{plugins}%/bbcode_tools.hejs"/>
+
+		<!-- Registration -->
+		<install-plugin path="%{plugins}%/bbcode_tools.hejs"/>
+	</install>
+
+	<!-- Uninstall actions -->
+	<uninstall>
+		<!-- Read me -->
+		<readme type="inline">This will uninstall BBCode Tools plugin for HippoEDIT.</readme>
+
+		<!-- Un-Registration -->
+		<uninstall-plugin id="5ACBAFF9-6A43-44D5-BDA1-4E647A51F6DF"/>
+
+		<!-- Source files -->
+		<remove-file name="%{plugins}%/bbcode_tools.hejs"/>
+	</uninstall>
+
+</package-info>
