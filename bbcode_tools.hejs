@@ -1,6 +1,6 @@
 #include "he_utils.js" // generic helper functions
 
-Application.AddScriptInfo("5ACBAFF9-6A43-44D5-BDA1-4E647A51F6DF", "BBCode Tools", "1.0.0.0", "BBCode Tools for HippoEDIT", "Alexandr Cojocari", "alexandr.cojocari@gmail.com", "http://wiki.hippoedit.com/plugins/bbcode-tools");
+Application.AddScriptInfo("5ACBAFF9-6A43-44D5-BDA1-4E647A51F6DF", "BBCode Tools", "1.0.0.0", "BBCode Tools for HippoEDIT", "Alexandr Cojocari", "alexandr.cojocari@gmail.com", "http://wiki.hippoedit.com/plugins/bbcode");
 
 //////////////////////////////////////////////////////////////////////////
 // ICON DEFINITIONS
