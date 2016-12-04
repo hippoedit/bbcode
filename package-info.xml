@@ -3,11 +3,11 @@
 <package-info xmlns="http://www.hippoedit.com/xml/package-info" xmlns:smf="http://www.hippoedit.com/">
 	<id>5ACBAFF9-6A43-44D5-BDA1-4E647A51F6DF</id>
 	<name>BBCode Tools</name>	
-	<version>1.0.0.0</version>
+	<version>1.0.0.1</version>
 	<description>BBCode Tools for HippoEDIT</description>
 	<author>Alexandr Cojocari</author>
 	<email>alexandr.cojocari@gmail.com</email>
-	<homepage>http://wiki.hippoedit.com/plugins/bbcode-tools</homepage>
+	<homepage>http://wiki.hippoedit.com/plugins/bbcode</homepage>
 	<memo/>
 
 	<!-- Common Install actions -->
